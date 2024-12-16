@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outreach Commission Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000103;
+            color: #4D6FF7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .calculator-container {
+            background: #060D1F;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+        }
+        .calculator-container h1 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #4D6FF7;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #95abd8;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #1E2637;
+            background-color: #030712;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4D6FF7;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #1E2637;
+            color: #4D6FF7;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #4D6FF7;
+            color: #fff;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+            color: #4D6FF7;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h1>Outreach Commission Calculator</h1>
+        
+        <div class="form-group">
+            <label for="currency">Select Currency:</label>
+            <select id="currency">
+                <option value="USD">USD</option>
+                <option value="INR">INR</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="total-deal">Total Deal Value:</label>
+            <input type="number" id="total-deal" placeholder="Enter total deal amount" />
+        </div>
+        
+        <div class="form-group">
+            <label for="first-project">First Project Value:</label>
+            <input type="number" id="first-project" placeholder="Enter first project amount" />
+        </div>
+        
+        <div class="form-group">
+            <label for="role">Select Role:</label>
+            <select id="role">
+                <option value="outreacher">Outreacher</option>
+                <option value="head">Head of Outreach</option>
+            </select>
+        </div>
+
+        <button class="btn" onclick="calculateCommission()">Calculate Commission</button>
+        
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        const exchangeRates = {
+            USD: 1,
+            INR: 83.2
+        };
+    
+        function calculateCommission() {
+            const totalDealInput = document.getElementById('total-deal').value;
+            const firstProjectInput = document.getElementById('first-project').value;
+            const role = document.getElementById('role').value;
+            const currency = document.getElementById('currency').value;
+            const resultDiv = document.getElementById('result');
+    
+            // Parse inputs
+            let totalDeal = parseFloat(totalDealInput);
+            let firstProject = parseFloat(firstProjectInput);
+    
+            // Check for valid First Project Value
+            if (isNaN(firstProject) || firstProject <= 0) {
+                resultDiv.textContent = 'Please enter a valid First Project amount.';
+                return;
+            }
+    
+            // Use First Project Value as Total Deal Value if Total Deal Value is not entered
+            if (isNaN(totalDeal) || totalDeal <= 0) {
+                totalDeal = firstProject;
+            }
+    
+            let commission = 0;
+    
+            // Calculate commission based on role
+            if (role === 'outreacher') {
+                commission = totalDeal * 0.10; // 10% for Outreachers
+            } else if (role === 'head') {
+                commission = firstProject * 0.05; // 5% for Head
+            } else {
+                resultDiv.textContent = 'Invalid role selected.';
+                return;
+            }
+    
+            // Calculate USD and INR commissions
+            const commissionUSD = commission.toFixed(2);
+            const commissionINR = (commission * exchangeRates.INR).toFixed(2);
+    
+            // Display results
+            resultDiv.innerHTML = `Commission:<br> 
+                ${commissionUSD} USD | ${commissionINR} INR`;
+        }
+    </script>
+    
+</body>
+</html>
